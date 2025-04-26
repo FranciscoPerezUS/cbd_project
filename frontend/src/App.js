@@ -2,7 +2,7 @@ import { useState } from 'react';
 import './App.css';
 
 function App() {
-  const [username, setUsername] = useState('');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
 
   const handleSubmit = async (e) => {
@@ -11,12 +11,12 @@ function App() {
     const response = await fetch('http://localhost:8080/usuarios', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, email })
+      body: JSON.stringify({ name, email })
     });
 
     if (response.ok) {
       alert('User created successfully!');
-      setUsername('');
+      setName('');
       setEmail('');
     } else {
       alert('Failed to create user');
@@ -31,7 +31,7 @@ function App() {
           type="text"
           placeholder="Username"
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => setName(e.target.value)}
           required
         />
         <br /><br />

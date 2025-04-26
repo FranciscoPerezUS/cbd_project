@@ -17,7 +17,7 @@ public class UserController {
     private ODatabaseSession db;
 
     private static User createUser(ODatabaseSession db, User user) {
-        System.out.println(db.getMetadata().getSchema().getClasses());
+        db.activateOnCurrentThread(); 
         OVertex result = db.newVertex("User");
         result.setProperty("name", user.getName());
         result.setProperty("email", user.getEmail());
