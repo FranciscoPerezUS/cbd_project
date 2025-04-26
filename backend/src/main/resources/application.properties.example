@@ -1,0 +1,5 @@
+spring.application.name=backend
+orientdb.url=remote:localhost
+orientdb.username=root
+orientdb.dbname=cbd_project_db
+orientdb.password=" PON TU CONTRASEÑA AQUI"
