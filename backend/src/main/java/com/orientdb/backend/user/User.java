@@ -1,4 +1,4 @@
-package com.orientdb.backend.model;
+package com.orientdb.backend.user;
 
 import lombok.Data;
 
