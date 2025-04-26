@@ -1,38 +1,49 @@
 package com.orientdb.backend.post;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.orientechnologies.orient.core.db.ODatabaseSession;
 import com.orientechnologies.orient.core.record.OVertex;
-import com.orientechnologies.orient.core.sql.executor.OResult;
 import com.orientechnologies.orient.core.sql.executor.OResultSet;
 
 @Repository
 public class PostRepository {
 
-    @Autowired
-    private ODatabaseSession db;
+    private final ODatabaseSession databaseSession;
 
-    public OVertex createPerson(Post post, Integer userId) {
-        OVertex result = db.newVertex("Post");
-        result.setProperty("title", post.getTitle());
-        result.setProperty("description", post.getDescription());
-        result.save();
-        return result;
+    public PostRepository(ODatabaseSession databaseSession) {
+        this.databaseSession = databaseSession;
     }
 
-    public Post findById(String title) {
-        String query = "SELECT FROM User WHERE title CONTAINS ?";
-        try (OResultSet rs = db.query(query, title)) {
+    public Post createPost(PostRequest post) throws Exception {
+        databaseSession.activateOnCurrentThread();
+        String statement = "SELECT FROM User WHERE username = ? AND password = ?";
+
+        try (OResultSet rs = databaseSession.query(statement, post.getUsername(), post.getPassword())) {
             if (rs.hasNext()) {
-                OResult r = rs.next();
-                Post p = new Post();
-                p.setTitle(r.getProperty("title"));
-                p.setDescription(r.getProperty("description"));
-                return p;
+                var userResult = rs.next();
+                String name = userResult.getProperty("name");
+                String email = userResult.getProperty("email");
+
+                OVertex postVertex = databaseSession.newVertex("Post");
+                postVertex.setProperty("title", post.getTitle());
+                postVertex.setProperty("description", post.getDescription());
+                postVertex.setProperty("name", name);
+                postVertex.setProperty("email", email);
+                postVertex.save();
+
+                userResult.getVertex().get().addEdge(postVertex, "Made");
+
+                Post createdPost = new Post();
+                createdPost.setTitle(post.getTitle());
+                createdPost.setDescription(post.getDescription());
+                createdPost.setName(name);
+                createdPost.setEmail(email);
+                return createdPost;
+
+            } else {
+                throw new Exception("User with credentials given not found.");
             }
         }
-        return null;
-    }
+    }   
 }

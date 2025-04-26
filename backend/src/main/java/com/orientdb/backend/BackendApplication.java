@@ -1,8 +1,8 @@
 package com.orientdb.backend;
 
 import com.orientechnologies.orient.core.db.ODatabaseSession;
-import com.orientechnologies.orient.core.metadata.schema.OClass;
 import com.orientechnologies.orient.core.metadata.schema.OSchema;
+import com.orientechnologies.orient.core.record.OVertex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -32,8 +32,12 @@ public class BackendApplication {
         try {
             OSchema schema = databaseSession.getMetadata().getSchema();
 
+            logger.info("Dropping all vertices and edges...");
+            databaseSession.command("DELETE VERTEX V").close();
+            databaseSession.command("DELETE EDGE E").close();
+            logger.info("All vertices and edges dropped.");
+
             logger.info("Initializing database schema...");
-            logger.info("Existing classes: {}", schema.getClasses());
 
             if (!schema.existsClass("User")) {
                 logger.info("Creating vertex class 'User'...");
@@ -53,6 +57,39 @@ public class BackendApplication {
             }
 
             logger.info("Database schema initialization completed.");
+
+            logger.info("Adding initial data...");
+
+            // Create initial users with roles
+            OVertex adminUser = databaseSession.newVertex("User");
+            adminUser.setProperty("name", "Admin");
+            adminUser.setProperty("email", "admin@example.com");
+			adminUser.setProperty("username", "admin");
+			adminUser.setProperty("password", "admin123");
+            adminUser.save();
+
+            OVertex regularUser = databaseSession.newVertex("User");
+            regularUser.setProperty("name", "User");
+            regularUser.setProperty("email", "user@example.com");
+			adminUser.setProperty("username", "user");
+			adminUser.setProperty("password", "user123");
+            regularUser.save();
+
+			OVertex postAdmin = databaseSession.newVertex("Post");
+            postAdmin.setProperty("title", "Publicación del admin");
+            postAdmin.setProperty("description", "Esto es una publicación del admin");
+            postAdmin.save();
+
+            OVertex postUser = databaseSession.newVertex("Post");
+            postUser.setProperty("title", "Publicación de un usuario");
+            postUser.setProperty("description", "Esto es una publicación de un usuario cualquiera");
+            postUser.save();
+
+			adminUser.addEdge(postAdmin,"Made");
+			regularUser.addEdge(postUser,"Made");
+			
+
+            logger.info("Initial data added successfully.");
         } catch (Exception e) {
             logger.error("Error during database schema initialization", e);
         }
