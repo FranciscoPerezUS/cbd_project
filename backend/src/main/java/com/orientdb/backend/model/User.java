@@ -1,0 +1,11 @@
+package com.orientdb.backend.model;
+
+import lombok.Data;
+
+@Data
+public class User {
+
+    private String name;
+
+    private String email;
+}
