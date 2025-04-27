@@ -3,6 +3,7 @@ package com.orientdb.backend.post;
 import org.springframework.stereotype.Repository;
 
 import com.orientechnologies.orient.core.db.ODatabaseSession;
+import com.orientechnologies.orient.core.record.ODirection;
 import com.orientechnologies.orient.core.record.OVertex;
 import com.orientechnologies.orient.core.sql.executor.OResult;
 import com.orientechnologies.orient.core.sql.executor.OResultSet;
@@ -62,16 +63,13 @@ public class PostRepository {
 
                 post.setTitle(result.getProperty("title"));
                 post.setDescription(result.getProperty("description"));
+                OVertex userVertex = result.getVertex().get().getEdges(ODirection.IN, "Made")
+                                               .iterator()
+                                               .next()
+                                               .getVertex(ODirection.OUT);
 
-                String edgeQuery = "";
-                try (OResultSet edgeResultSet = databaseSession.query(edgeQuery, result.getIdentity())) {
-                    if (edgeResultSet.hasNext()) {
-                        OResult edgeResult = edgeResultSet.next();
-                        post.setName(edgeResult.getProperty("name"));
-                        post.setEmail(edgeResult.getProperty("email"));
-                    }
-                }
-
+                post.setName(userVertex.getProperty("name"));
+                post.setEmail(userVertex.getProperty("email"));
                 posts.add(post);
             }
         } catch (Exception e) {

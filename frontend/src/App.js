@@ -51,6 +51,7 @@ function Home() {
             <li key={index}>
               <h4>{post.title}</h4>
               <p>{post.description}</p>
+              <p>Name: {post.name} Email: {post.email}</p>
             </li>
           ))}
         </ul>
