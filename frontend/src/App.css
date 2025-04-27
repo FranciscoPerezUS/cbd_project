@@ -1,3 +1,249 @@
+:root {
+  --primary-color: #fc6621;
+  --secondary-color: #000000;
+  --accent-color: #4895ef;
+  --light-color: #f8f9fa;
+  --dark-color: #212529;
+  --success-color: #4cc9f0;
+  --danger-color: #f72585;
+  --border-radius: 12px; /* Aumentado para más redondez */
+  --border-radius-small: 8px; /* Para elementos más pequeños */
+  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+/* Reset y base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #cfcfcf;
+  color: var(--dark-color);
+  line-height: 1.6;
+}
+
+/* Navbar */
+.main-nav {
+  background-color: var(--primary-color);
+  padding: 1rem 2rem;
+  box-shadow: var(--box-shadow);
+}
+
+.nav-link {
+  color: white !important;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius-small);
+  transition: var(--transition);
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Home Page */
+.home-page {
+  text-align: center;
+  padding: 2rem;
+}
+
+.home-page h1 {
+  color: var(--primary-color);
+  margin-bottom: 2rem;
+}
+
+.navigation-cards {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.nav-card {
+  display: block;
+  width: 300px;
+  padding: 2rem;
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  text-decoration: none;
+  color: var(--dark-color);
+  transition: var(--transition);
+  overflow: hidden;
+}
+
+.nav-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.nav-card h2 {
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+}
+
+.nav-card p {
+  color: #666;
+}
+
+/* Posts Page */
+.posts-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.posts-list {
+  list-style: none;
+  margin-top: 2rem;
+}
+
+.post-item {
+  background-color: white;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  overflow: hidden;
+}
+
+.post-item h3 {
+  color: var(--secondary-color);
+  margin-bottom: 0.5rem;
+}
+
+.post-meta {
+  color: #666;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+/* Register Form */
+.register-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 120px); 
+  padding: 2rem;
+}
+
+.register-form {
+  width: 100%;
+  text-align: center;
+  max-width: 400px;
+  background: white;
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+.register-form label {
+  text-align: center;
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--dark-color);
+  font-weight: 500;
+}
+
+.register-form input {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius-small);
+  transition: var(--transition);
+}
+
+.register-form input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(72, 149, 239, 0.2);
+}
+
+/* Botón mejorado */
+.register-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 20px;
+  gap: 10px;
+  background-color: #fc6621;
+  outline: 3px #cfcfcf solid;
+  outline-offset: -3px;
+  border-radius: var(--border-radius-small);
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.register-button .button-text {
+  color: white;
+  font-weight: 700;
+  font-size: 1em;
+  transition: var(--transition);
+}
+
+.register-button:hover {
+  background-color: transparent;
+}
+
+.register-button:hover .button-text {
+  color: #fc6621;
+}
+
+/* Layouts */
+.container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 2rem;
+  border-radius: var(--border-radius);
+}
+
+.home-container {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem;
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+.posts-sidebar {
+  width: 30%;
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.main-content {
+  width: 70%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .home-container {
+    flex-direction: column;
+  }
+
+  .posts-sidebar, .main-content {
+    width: 100%;
+  }
+  
+  .navigation-cards {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
 .App {
   text-align: center;
 }
