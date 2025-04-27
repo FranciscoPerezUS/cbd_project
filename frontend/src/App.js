@@ -4,6 +4,10 @@ import './App.css';
 
 function Home() {
   const [posts, setPosts] = useState([]);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -19,6 +23,24 @@ function Home() {
     fetchPosts();
   }, []);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const response = await fetch('http://localhost:8080/usuarios', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, username, password })
+    });
+
+    if (response.ok) {
+      alert('User registered successfully!');
+      setName('');
+      setEmail('');
+    } else {
+      alert('Failed to register user');
+    }
+  };
+
   return (
     <div style={{ display: 'flex', padding: '2rem' }}>
       {/* Sidebar for posts */}
@@ -33,81 +55,47 @@ function Home() {
           ))}
         </ul>
       </div>
+      {/* Registration form */}
       <div style={{ width: '70%' }}>
-        <h1>Welcome to the Home Page</h1>
+        <h1>Register</h1>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+          <br /><br />
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <br /><br />
+          <input
+            type="username"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+          <br /><br />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <br /><br />
+          <button type="submit">Register</button>
+        </form>
       </div>
     </div>
   );
-}
-
-function Register() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const response = await fetch('http://localhost:8080/usuarios', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email })
-    });
-
-    if (response.ok) {
-      alert('User registered successfully!');
-      setName('');
-      setEmail('');
-    } else {
-      alert('Failed to register user');
-    }
-  };
-
-  return (
-    <div style={{ padding: '2rem' }}>
-      <h1>Register</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-        <br /><br />
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <br /><br />
-        <button type="submit">Register</button>
-      </form>
-    </div>
-  );
-}
-
-function createPost(postRequest) {
-    fetch('/api/posts', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(postRequest),
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to create post');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Post created successfully:', data);
-        })
-        .catch(error => {
-            console.error('Error creating post:', error);
-        });
 }
 
 function App() {
@@ -116,14 +104,12 @@ function App() {
       <div>
         {/* Navbar */}
         <nav style={{ padding: '1rem', backgroundColor: '#f0f0f0' }}>
-          <Link to="/" style={{ marginRight: '1rem' }}>Home</Link>
-          <Link to="/register">Register</Link>
+          <Link to="/" style={{ marginRight: '1rem' }}>Home & Register</Link>
         </nav>
 
         {/* Routes */}
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/register" element={<Register />} />
         </Routes>
       </div>
     </Router>

@@ -72,8 +72,8 @@ public class BackendApplication {
             OVertex regularUser = databaseSession.newVertex("User");
             regularUser.setProperty("name", "User");
             regularUser.setProperty("email", "user@example.com");
-			adminUser.setProperty("username", "user");
-			adminUser.setProperty("password", "user123");
+			regularUser.setProperty("username", "user");
+			regularUser.setProperty("password", "user123");
             regularUser.save();
 
 			OVertex postAdmin = databaseSession.newVertex("Post");
