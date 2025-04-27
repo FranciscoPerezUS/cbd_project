@@ -23,8 +23,7 @@ public class UserRepository {
         result.setProperty("email", user.getEmail());
         result.setProperty("password", user.getPassword());
         result.setProperty("username", user.getUsername());
-        result.save();
-        
+        result.save();        
         return user;
     }
 }

@@ -4,7 +4,11 @@ import org.springframework.stereotype.Repository;
 
 import com.orientechnologies.orient.core.db.ODatabaseSession;
 import com.orientechnologies.orient.core.record.OVertex;
+import com.orientechnologies.orient.core.sql.executor.OResult;
 import com.orientechnologies.orient.core.sql.executor.OResultSet;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class PostRepository {
@@ -15,7 +19,7 @@ public class PostRepository {
         this.databaseSession = databaseSession;
     }
 
-    public Post createPost(PostRequest post) throws Exception {
+    public PostReply createPost(PostRequest post) throws Exception {
         databaseSession.activateOnCurrentThread();
         String statement = "SELECT FROM User WHERE username = ? AND password = ?";
 
@@ -28,13 +32,11 @@ public class PostRepository {
                 OVertex postVertex = databaseSession.newVertex("Post");
                 postVertex.setProperty("title", post.getTitle());
                 postVertex.setProperty("description", post.getDescription());
-                postVertex.setProperty("name", name);
-                postVertex.setProperty("email", email);
                 postVertex.save();
 
                 userResult.getVertex().get().addEdge(postVertex, "Made");
 
-                Post createdPost = new Post();
+                PostReply createdPost = new PostReply();
                 createdPost.setTitle(post.getTitle());
                 createdPost.setDescription(post.getDescription());
                 createdPost.setName(name);
@@ -46,4 +48,36 @@ public class PostRepository {
             }
         }
     }   
+
+    public List<PostReply> getAllPosts() {
+        databaseSession.activateOnCurrentThread();
+
+        List<PostReply> posts = new ArrayList<>();
+        String query = "SELECT FROM Post";
+
+        try (OResultSet rs = databaseSession.query(query)) {
+            while (rs.hasNext()) {
+                OResult result = rs.next();
+                PostReply post = new PostReply();
+
+                post.setTitle(result.getProperty("title"));
+                post.setDescription(result.getProperty("description"));
+
+                String edgeQuery = "";
+                try (OResultSet edgeResultSet = databaseSession.query(edgeQuery, result.getIdentity())) {
+                    if (edgeResultSet.hasNext()) {
+                        OResult edgeResult = edgeResultSet.next();
+                        post.setName(edgeResult.getProperty("name"));
+                        post.setEmail(edgeResult.getProperty("email"));
+                    }
+                }
+
+                posts.add(post);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to fetch posts", e);
+        }
+
+        return posts;
+    }
 }

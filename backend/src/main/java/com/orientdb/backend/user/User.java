@@ -6,7 +6,6 @@ import lombok.Data;
 
 @Data
 public class User {
-    private String id; // OrientDB record ID
 
     @NotBlank
     private String username;

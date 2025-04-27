@@ -1,10 +1,10 @@
 package com.orientdb.backend.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.orientechnologies.orient.core.db.ODatabaseSession;
-import com.orientechnologies.orient.core.record.OVertex;
+import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -15,12 +15,12 @@ public class UserController {
     UserRepository userRepository;
 
     @PostMapping
-    public User createUser(@RequestBody User user) {
-        return userRepository.createUser(user);
-    }
-
-    @GetMapping("/{name}")
-    public User getUserByName(@PathVariable String name) {
-        return new User();
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        try {
+            User createdUser = userRepository.createUser(user);
+            return ResponseEntity.ok(createdUser);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 }

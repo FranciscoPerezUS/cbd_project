@@ -2,6 +2,7 @@ package com.orientdb.backend;
 
 import com.orientechnologies.orient.core.db.ODatabaseSession;
 import com.orientechnologies.orient.core.metadata.schema.OSchema;
+import com.orientechnologies.orient.core.record.OEdge;
 import com.orientechnologies.orient.core.record.OVertex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,8 +34,8 @@ public class BackendApplication {
             OSchema schema = databaseSession.getMetadata().getSchema();
 
             logger.info("Dropping all vertices and edges...");
-            databaseSession.command("DELETE VERTEX V").close();
-            databaseSession.command("DELETE EDGE E").close();
+            databaseSession.command("DELETE VERTEX V UNSAFE").close();
+            databaseSession.command("DELETE EDGE E UNSAFE").close();
             logger.info("All vertices and edges dropped.");
 
             logger.info("Initializing database schema...");
@@ -85,8 +86,11 @@ public class BackendApplication {
             postUser.setProperty("description", "Esto es una publicación de un usuario cualquiera");
             postUser.save();
 
-			adminUser.addEdge(postAdmin,"Made");
-			regularUser.addEdge(postUser,"Made");
+			OEdge madeByAdmin = adminUser.addEdge(postAdmin, "Made");
+			madeByAdmin.save();
+
+			OEdge madeByUser = regularUser.addEdge(postUser, "Made");
+			madeByUser.save(); 
 			
 
             logger.info("Initial data added successfully.");

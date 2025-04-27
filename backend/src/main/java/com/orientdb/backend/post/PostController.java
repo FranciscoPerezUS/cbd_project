@@ -1,14 +1,11 @@
 package com.orientdb.backend.post;
 
-import java.util.ArrayList;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import com.orientechnologies.orient.core.db.ODatabaseSession;
-import com.orientechnologies.orient.core.sql.executor.OResult;
-import com.orientechnologies.orient.core.sql.executor.OResultSet;
 
 @RestController
 @RequestMapping("/posts")
@@ -16,38 +13,25 @@ import com.orientechnologies.orient.core.sql.executor.OResultSet;
 public class PostController {
 
     @Autowired
-    private ODatabaseSession databaseSession;
+    private PostRepository postRepository;
 
     @PostMapping
-    public Post createPost(@RequestBody Post post, @RequestParam Integer userId) {
-        return null;
-    }
-
-    @GetMapping("/{title}")
-    public Post getPostByTitle(@PathVariable String title) {
-        return null;
+    public ResponseEntity<PostReply> createPost(@RequestBody PostRequest postRequest) {
+        try {
+            PostReply createdPost = postRepository.createPost(postRequest);
+            return ResponseEntity.ok(createdPost);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 
     @GetMapping
-    public List<Post> getAllPosts() {
-        databaseSession.activateOnCurrentThread(); // Ensure the session is active
-
-        List<Post> posts = new ArrayList<>();
-        String query = "SELECT FROM Post";
-
-        try (OResultSet rs = databaseSession.query(query)) { // Use the session's query method
-            while (rs.hasNext()) {
-                OResult result = rs.next();
-                Post post = new Post();
-
-                post.setTitle(result.getProperty("title"));
-                post.setDescription(result.getProperty("description"));
-                posts.add(post);
-            }
+    public ResponseEntity<List<PostReply>> getAllPosts() {
+        try {
+            List<PostReply> posts = postRepository.getAllPosts();
+            return ResponseEntity.ok(posts);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to fetch posts", e);
+            return ResponseEntity.badRequest().body(null);
         }
-
-        return posts;
     }
 }
