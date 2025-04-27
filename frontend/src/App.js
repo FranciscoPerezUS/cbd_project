@@ -6,6 +6,8 @@ function Home() {
   const [posts, setPosts] = useState([]);
   const [userForm, setUserForm] = useState({ name: '', email: '', username: '', password: '' });
   const [postForm, setPostForm] = useState({ title: '', description: '', username: '', password: '' });
+  const [likeModal, setLikeModal] = useState({ isOpen: false, postId: null });
+  const [likeForm, setLikeForm] = useState({username: '', password: '' });
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -55,8 +57,39 @@ function Home() {
     if (response.ok) {
       alert('¡Publicación enviada con éxito!');
       setPostForm({ title: '', description: '', username: '', password: '' });
+      const updatedPosts = await fetch('http://localhost:8080/posts').then((res) => res.json());
+      setPosts(updatedPosts);
     } else {
       alert('Error al enviar la publicación');
+    }
+  };
+
+  const handleLike = async (e) => {
+    e.preventDefault();
+    const { postId } = likeModal;
+
+    const updatedLikeForm = { ...likeForm, postId };
+
+    try {
+      const response = await fetch(`http://localhost:8080/posts/like`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedLikeForm),
+      });
+
+      if (response.ok) {
+        alert('¡Publicación marcada como me gusta!');
+        setLikeModal({ isOpen: false, postId: null });
+        setLikeForm({ username: '', password: '' });
+        const updatedPosts = await fetch('http://localhost:8080/posts').then((res) => res.json());
+        setPosts(updatedPosts);
+      } else {
+        console.error('Failed to like post:', response.status, response.statusText);
+        alert('Error al marcar la publicación como me gusta');
+      }
+    } catch (error) {
+      console.error('Error in handleLike:', error);
+      alert('Error al marcar la publicación como me gusta');
     }
   };
 
@@ -70,6 +103,7 @@ function Home() {
               <h4>{post.title}</h4>
               <p>{post.description}</p>
               <p>Nombre: {post.name} Correo: {post.email}</p>
+              <button onClick={() => setLikeModal({ isOpen: true, postId: post.id })}>Me gusta</button> Likes: {post.likes}
             </li>
           ))}
         </ul>
@@ -157,7 +191,67 @@ function Home() {
           <br /><br />
           <button type="submit">Submit Post</button>
         </form>
+      </div>
+
+      {likeModal.isOpen && (
+        <div
+          className="modal"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000,
+          }}
+        >
+          <div
+            className="modal-content"
+            style={{
+              backgroundColor: 'white',
+              padding: '2rem',
+              borderRadius: '8px',
+              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+              width: '300px',
+              textAlign: 'center',
+            }}
+          >
+            <h2>Confirm Like</h2>
+            <form onSubmit={handleLike}>
+              <input
+                type="text"
+                name="username"
+                placeholder="Username"
+                value={likeForm.username}
+                onChange={(e) => handleInputChange(e, setLikeForm)}
+                required
+                style={{ width: '100%', marginBottom: '1rem', padding: '0.5rem' }}
+              />
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                value={likeForm.password}
+                onChange={(e) => handleInputChange(e, setLikeForm)}
+                required
+                style={{ width: '100%', marginBottom: '1rem', padding: '0.5rem' }}
+              />
+              <button type="submit" style={{ marginRight: '1rem', padding: '0.5rem 1rem' }}>Confirm</button>
+              <button
+                type="button"
+                onClick={() => setLikeModal({ isOpen: false, postId: null })}
+                style={{ padding: '0.5rem 1rem' }}
+              >
+                Cancel
+              </button>
+            </form>
+          </div>
         </div>
+      )}
     </div>
   );
 }

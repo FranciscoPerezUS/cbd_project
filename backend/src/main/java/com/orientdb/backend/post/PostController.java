@@ -25,6 +25,18 @@ public class PostController {
         }
     }
 
+    @PostMapping("/like")
+    public ResponseEntity<Void> likePost(@RequestBody LikeRequest likeRequest) {
+        try {
+            System.out.println("Received LikeRequest: " + likeRequest); // Log the request
+            postRepository.likePost(likeRequest);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the exception
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     @GetMapping
     public ResponseEntity<List<PostReply>> getAllPosts() {
         try {
