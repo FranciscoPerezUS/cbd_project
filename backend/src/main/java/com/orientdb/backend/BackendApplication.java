@@ -34,8 +34,8 @@ public class BackendApplication {
             OSchema schema = databaseSession.getMetadata().getSchema();
 
             logger.info("Dropping all vertices and edges...");
-            databaseSession.command("DELETE VERTEX V UNSAFE").close();
-            databaseSession.command("DELETE EDGE E UNSAFE").close();
+            databaseSession.command("DELETE VERTEX V").close();
+            databaseSession.command("DELETE EDGE E").close();
             logger.info("All vertices and edges dropped.");
 
             logger.info("Initializing database schema...");
