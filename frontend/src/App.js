@@ -58,7 +58,7 @@ function Posts() {
 
   return (
     <div className="posts-container">
-      <h1>All Posts</h1>
+      <h1>Publicaciones</h1>
       <ul className="posts-list">
         {posts.map((post, index) => (
           <li key={index} className="post-item">
@@ -104,9 +104,9 @@ function Posts() {
         boxShadow: 'var(--box-shadow)',
       }}
     >
-      <h2 style={{ marginBottom: '1rem', color: 'var(--primary-color)' }}>Confirm Like</h2>
+      <h2 style={{ marginBottom: '1rem', color: 'var(--primary-color)' }}>Confirmar Me gusta</h2>
       <form onSubmit={handleLike}>
-        <label>Username</label>
+        <label>Nombre de usuario</label>
         <input
           type="text"
           name="username"
@@ -116,7 +116,7 @@ function Posts() {
           required
         />
 
-        <label>Password</label>
+        <label>Contraseña</label>
         <input
           type="password"
           name="password"
@@ -128,14 +128,14 @@ function Posts() {
 
         <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
           <button type="submit" className="register-button">
-            <span className="button-text">Confirm</span>
+            <span className="button-text">Confirmar</span>
           </button>
           <button
             type="button"
             onClick={() => setLikeModal({ isOpen: false, postId: null })}
             className="register-button"
           >
-            <span className="button-text">Cancel</span>
+            <span className="button-text">Cancelar</span>
           </button>
         </div>
       </form>
@@ -174,24 +174,24 @@ function Register() {
 
   return (
       <div className="register-container">
-        <h1>Register</h1>
+        <h1>Registrarse</h1>
     <form className="register-form" onSubmit={handleUserSubmit}>
       
       {/* inputs */}
-      <label>Name</label>
+      <label>Nombre</label>
       <input type="text" name="name" placeholder="Name" value={userForm.name} onChange={handleInputChange} required />
       
-      <label>Email</label>
+      <label>Correo</label>
       <input type="email" name="email" placeholder="Email" value={userForm.email} onChange={handleInputChange} required />
       
-      <label>Username</label>
+      <label>Nombre de usuario</label>
       <input type="text" name="username" placeholder="Username" value={userForm.username} onChange={handleInputChange} required />
       
-      <label>Password</label>
+      <label>Contraseña</label>
       <input type="password" name="password" placeholder="Password" value={userForm.password} onChange={handleInputChange} required />
       
       <button className="register-button" type="submit">
-        <span className="button-text">Register</span>
+        <span className="button-text">Registrarse</span>
       </button>
     </form>
   </div>
@@ -231,7 +231,7 @@ function SubmitPost() {
         <input
           type="text"
           name="title"
-          placeholder="Title"
+          placeholder="Título"
           value={postForm.title}
           onChange={handleInputChange}
           required
@@ -240,7 +240,7 @@ function SubmitPost() {
         <input
           type="text"
           name="description"
-          placeholder="Description"
+          placeholder="Descripción"
           value={postForm.description}
           onChange={handleInputChange}
           required
@@ -249,7 +249,7 @@ function SubmitPost() {
         <input
           type="text"
           name="username"
-          placeholder="Username"
+          placeholder="Nombre de usuario"
           value={postForm.username}
           onChange={handleInputChange}
           required
@@ -258,7 +258,7 @@ function SubmitPost() {
         <input
           type="password"
           name="password"
-          placeholder="Password"
+          placeholder="Contraseña"
           value={postForm.password}
           onChange={handleInputChange}
           required
@@ -279,16 +279,16 @@ function Home() {
           <h1>Bienvenidos!</h1>
           <div className="navigation-cards">
             <Link to="/posts" className="nav-card">
-              <h2>View Posts</h2>
-              <p>See all the latest posts</p>
+              <h2>Ver Publicaciones</h2>
+              <p>Ve todas las últimas publicaciones</p>
             </Link>
             <Link to="/submit-post" className="nav-card">
               <h2>Crear Publicación</h2>
               <p>Hacer una publicación</p>
             </Link>
             <Link to="/register" className="nav-card">
-              <h2>Register</h2>
-              <p>Create a new account</p>
+              <h2>Registrarse</h2>
+              <p>Crear una nueva cuenta</p>
             </Link>
           </div>
         </div>
@@ -301,10 +301,10 @@ function App() {
     <Router>
       <div>
         <nav className="main-nav">
-          <Link to="/" className="nav-link">Home</Link>
-          <Link to="/posts" className="nav-link">Posts</Link>
-          <Link to="/register" className="nav-link">Register</Link>
-          <Link to="/submit-post" className="nav-link">Submit Post</Link>
+          <Link to="/" className="nav-link">Inicio</Link>
+          <Link to="/posts" className="nav-link">Publicaciones</Link>
+          <Link to="/register" className="nav-link">Registrar</Link>
+          <Link to="/submit-post" className="nav-link">Hacer publicación</Link>
         </nav>
         <Routes>
           <Route path="/" element={<Home />} />
